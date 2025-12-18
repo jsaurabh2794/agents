@@ -21,11 +21,11 @@ def push(text):
 
 
 def record_user_details(email, name="Name not provided", notes="not provided"):
-    push(f"Recording {name} with email {email} and notes {notes}")
+    push(f"A person named {name} with email {email} and notes {notes}")
     return {"recorded": "ok"}
 
 def record_unknown_question(question):
-    push(f"Recording {question}")
+    push(f"Recording the question which I didn't know the answer to: {question}")
     return {"recorded": "ok"}
 
 record_user_details_json = {
@@ -79,7 +79,8 @@ class Me:
         self.GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
         self.GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
         self.openai = OpenAI(base_url=self.GEMINI_BASE_URL, api_key=self.GOOGLE_API_KEY)
-        self.name = "Harsh Patidar"
+        self.name = "Saurabh Kumar"
+        print("Current Directory:", os.getcwd(), flush=True)
         reader = PdfReader("me/linkedin.pdf")
         self.linkedin = ""
         for page in reader.pages:
@@ -118,7 +119,7 @@ If the user is engaging in discussion, try to steer them towards getting in touc
         messages = [{"role": "system", "content": self.system_prompt()}] + history + [{"role": "user", "content": message}]
         done = False
         while not done:
-            response = self.openai.chat.completions.create(model="gemini-2.5-flash-preview-05-20", messages=messages, tools=tools)
+            response = self.openai.chat.completions.create(model="gemini-2.5-flash", messages=messages, tools=tools)
             if response.choices[0].finish_reason=="tool_calls":
                 message = response.choices[0].message
                 tool_calls = message.tool_calls
